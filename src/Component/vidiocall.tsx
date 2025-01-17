@@ -10,7 +10,7 @@ const VideoCall = () => {
     const pcRef = useRef<RTCPeerConnection>();
 
     const { roomName } = useParams();
-
+    console.log(useParams());
     const getMedia = async () => {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
@@ -61,6 +61,7 @@ const VideoCall = () => {
             pcRef.current.setLocalDescription(sdp);
             console.log("sent the offer");
             socketRef.current.emit("offer", sdp, roomName);
+            console.log(sdp, roomName);
         } catch (e) {
             console.error(e);
         }
@@ -153,30 +154,32 @@ const VideoCall = () => {
                         }}
                     >
                         <video
-                            id="remotevideo"
+                            id="myvideo"
                             style={{
                                 width: 500,
                                 height: 300,
-                                // backgroundColor: "black",
+                                // backgroundColor: "red",
                                 transform: "scaleX(-1)",
-
-                                filter: "blur(0.9px) brightness(95%) contrast(120%) grayscale(20%) saturate(130%)" /* 필터 효과 */,
+                                filter: "blur(1px) brightness(80%) contrast(120%) grayscale(40%) saturate(140%)",
                             }}
                             ref={myVideoRef}
                             autoPlay
+                            playsInline
+                            muted
                         />
-
                         <video
                             id="remotevideo"
                             style={{
                                 width: 500,
                                 height: 300,
-                                // backgroundColor: "black",
+                                // backgroundColor: "red",
                                 transform: "scaleX(-1)",
-                                filter: "blur(0.9px) brightness(95%) contrast(120%) grayscale(20%) saturate(130%)",
+                                filter: "blur(1px) brightness(80%) contrast(120%) grayscale(40%) saturate(140%)",
                             }}
                             ref={remoteVideoRef}
+                            muted
                             autoPlay
+                            playsInline
                         />
                     </div>
                 </div>
