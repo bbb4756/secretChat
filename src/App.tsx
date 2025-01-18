@@ -10,7 +10,7 @@ function App() {
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<></>} />
+                {/* <Route path="/" element={<></>} /> */}
                 <Route path="/:roomName" element={<VideoCall />} />
             </Routes>
         </Router>

@@ -24,3 +24,5 @@ yarn-debug.log*
 yarn-error.log*
 /private.pem
 /public.pem
+
+/public/test.jpeg

@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
+import html2canvas from "html2canvas";
+
 import "./videoCall.scss";
 
 const VideoCall = () => {
@@ -11,6 +13,27 @@ const VideoCall = () => {
 
     const { roomName } = useParams();
     console.log(useParams());
+
+    const cameraRef = useRef<HTMLDivElement>(null);
+    const onCapture = () => {
+        if (cameraRef.current) {
+            html2canvas(cameraRef.current).then((canvas) => {
+                //사용할 이미지 포멧과 제목 선택
+                onSaveAs(canvas.toDataURL("image/png"), "image-download.png");
+            });
+        }
+    };
+
+    const onSaveAs = (uri: string, filename: string) => {
+        //a 태그를 생성하고 다운로드받음
+        const link = document.createElement("a");
+        document.body.appendChild(link);
+        link.href = uri;
+        link.download = filename;
+        link.click();
+        document.body.removeChild(link);
+    };
+
     const getMedia = async () => {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
@@ -140,12 +163,39 @@ const VideoCall = () => {
     }, []);
 
     return (
-        <div style={{ width: "100%", height: "auto" }}>
+        <div
+            style={{
+                width: "100%",
+                height: "auto",
+                display: "flex",
+                flexDirection: "column",
+                alignContent: "center",
+                background: "#1e1e1e",
+            }}
+            ref={cameraRef}
+        >
             <div id="text" data-text="y2k Video Chat">
                 y2k Video Chat
             </div>
-            <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
-                <div style={{ width: "80%", marginTop: "12%", paddingLeft: 50 }}>
+            <div
+                style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    position: "relative",
+                }}
+            >
+                <img
+                    src="/camera.png"
+                    width={1000}
+                    height={500}
+                    style={{
+                        position: "absolute",
+                        top: "27%",
+                        filter: "blur(1px) brightness(60%) contrast(120%) grayscale(40%) saturate(140%)",
+                    }}
+                ></img>
+                <div style={{ width: "60%", marginTop: "17%" }}>
                     <div
                         style={{
                             display: "flex",
@@ -153,35 +203,99 @@ const VideoCall = () => {
                             alignItems: "center",
                         }}
                     >
-                        <video
-                            id="myvideo"
+                        <div
                             style={{
-                                width: 500,
+                                width: 400,
                                 height: 300,
-                                // backgroundColor: "red",
-                                transform: "scaleX(-1)",
-                                filter: "blur(1px) brightness(80%) contrast(120%) grayscale(40%) saturate(140%)",
+                                position: "relative",
                             }}
-                            ref={myVideoRef}
-                            autoPlay
-                            playsInline
-                            muted
-                        />
-                        <video
-                            id="remotevideo"
+                        >
+                            <video
+                                id="myvideo"
+                                style={{
+                                    width: 400,
+                                    height: 300,
+
+                                    transform: "scaleX(-1)",
+                                    filter: "blur(1.2px) brightness(80%) contrast(120%) grayscale(40%) saturate(140%)",
+                                }}
+                                ref={myVideoRef}
+                                autoPlay
+                                playsInline
+                                muted
+                            />
+                            <p
+                                style={{
+                                    fontSize: 20,
+                                    color: "#939393",
+                                    position: "absolute",
+                                    right: 10,
+                                    bottom: -15,
+                                    fontFamily: "Ownglyph_ParkDaHyun",
+                                }}
+                            >
+                                나
+                            </p>
+                        </div>
+
+                        <div
                             style={{
-                                width: 500,
+                                width: 400,
                                 height: 300,
-                                // backgroundColor: "red",
-                                transform: "scaleX(-1)",
-                                filter: "blur(1px) brightness(80%) contrast(120%) grayscale(40%) saturate(140%)",
+                                position: "relative",
                             }}
-                            ref={remoteVideoRef}
-                            muted
-                            autoPlay
-                            playsInline
-                        />
+                        >
+                            <video
+                                id="remotevideo"
+                                style={{
+                                    width: 500,
+                                    height: 300,
+                                    // backgroundColor: "red",
+                                    transform: "scaleX(-1)",
+                                    filter: "blur(1px) brightness(80%) contrast(120%) grayscale(40%) saturate(140%)",
+                                }}
+                                ref={remoteVideoRef}
+                                muted
+                                autoPlay
+                                playsInline
+                            />
+                            {/* <img
+                                src={"/test.jpeg"}
+                                width={400}
+                                height={300}
+                                object-fit="cover"
+                                style={{ filter: "blur(1px)  contrast(120%)" }}
+                            /> */}
+                            <p
+                                style={{
+                                    fontSize: 20,
+                                    color: "#939393",
+                                    position: "absolute",
+                                    left: 10,
+                                    bottom: -15,
+                                    fontFamily: "Ownglyph_ParkDaHyun",
+                                }}
+                            >
+                                너
+                            </p>
+                        </div>
                     </div>
+                </div>
+            </div>
+            <div
+                style={{
+                    width: "67%",
+                    height: 100,
+                    alignSelf: "center",
+                    position: "relative",
+                    // background: "red",
+                    marginTop: "7%",
+                }}
+            >
+                <div className="tabs">
+                    <button className="tab" onClick={onCapture}>
+                        📷 사진찍기
+                    </button>
                 </div>
             </div>
         </div>

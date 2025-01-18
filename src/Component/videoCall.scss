@@ -1,3 +1,10 @@
+@font-face {
+    font-family: "Ownglyph_ParkDaHyun";
+    src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2411-3@1.0/Ownglyph_ParkDaHyun.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+}
+
 @mixin animation($animate...) {
     $max: length($animate);
     $animations: "";
@@ -184,4 +191,29 @@ body {
     50% {
         @include opacity(1);
     }
+}
+
+.tabs {
+    display: block;
+    margin: 8px;
+}
+
+.tabs > * {
+    padding: 1rem;
+}
+
+.tab {
+    font-family: "Ownglyph_ParkDaHyun";
+    display: inline-block;
+    width: 20;
+    background: "#dcdcdc";
+    padding: 10px 15px;
+    font-size: 20px;
+    cursor: pointer;
+    margin-bottom: 5px;
+    position: absolute;
+    right: 0px;
+    top: 15px;
+    border-radius: 5px;
+    color: #2e2e2e;
 }
